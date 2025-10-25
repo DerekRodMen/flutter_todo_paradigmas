@@ -41,3 +41,13 @@ class TareaCard extends StatelessWidget {
     );
   }
 }
+   
+
+
+
+
+
+
+
+
+   

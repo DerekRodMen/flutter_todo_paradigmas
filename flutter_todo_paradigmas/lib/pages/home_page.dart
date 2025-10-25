@@ -48,7 +48,12 @@ class _HomePageState extends State<HomePage> {
   void eliminarTarea(String id) {
     setState(() => tareas.removeWhere((t) => t.id == id));
     guardarTareas();
-  }
+  
+  
+  
+  
+  }    
+
 
   void toggleCompletada(String id) {
     setState(() {
