@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'pages/home_page.dart';
+import 'pages/kanban_azure_page.dart';
 
-void main() => runApp(const TodoApp());
+void main() {
+  runApp(const MyApp());
+}
 
-class TodoApp extends StatelessWidget {
-  const TodoApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gestor de Tareas Multiparadigma',
-      theme: ThemeData(
-        colorSchemeSeed: Colors.deepPurple,
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData.dark(),
-      home: const HomePage(),
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
+      home: KanbanAzurePage(),
     );
   }
 }

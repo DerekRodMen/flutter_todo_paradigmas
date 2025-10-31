@@ -1,46 +1,39 @@
-// ================================================
-// 🧱 Modelo orientado a objetos (Paradigma OO)
-// ================================================
 class Tarea {
   String id;
   String titulo;
   String descripcion;
-  bool completada;
+  String encargado;
   DateTime fechaCreacion;
-  DateTime? fechaLimite;
-  String prioridad;
+  DateTime fechaLimite;
 
   Tarea({
     required this.id,
     required this.titulo,
     required this.descripcion,
-    this.completada = false,
+    this.encargado = '',
     required this.fechaCreacion,
-    this.fechaLimite,
-    this.prioridad = 'Media',
+    required this.fechaLimite,
   });
 
-  // Convertir a Map para guardar en SharedPreferences
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'titulo': titulo,
-        'descripcion': descripcion,
-        'completada': completada,
-        'fechaCreacion': fechaCreacion.toIso8601String(),
-        'fechaLimite': fechaLimite?.toIso8601String(),
-        'prioridad': prioridad,
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'encargado': encargado,
+      'fechaCreacion': fechaCreacion.toIso8601String(),
+      'fechaLimite': fechaLimite.toIso8601String(),
+    };
+  }
 
-  // Convertir desde Map (al leer del almacenamiento)
-  factory Tarea.fromMap(Map<String, dynamic> map) => Tarea(
-        id: map['id'],
-        titulo: map['titulo'],
-        descripcion: map['descripcion'],
-        completada: map['completada'],
-        fechaCreacion: DateTime.parse(map['fechaCreacion']),
-        fechaLimite: map['fechaLimite'] != null
-            ? DateTime.parse(map['fechaLimite'])
-            : null,
-        prioridad: map['prioridad'],
-      );
+  factory Tarea.fromMap(Map<String, dynamic> map) {
+    return Tarea(
+      id: map['id'],
+      titulo: map['titulo'],
+      descripcion: map['descripcion'],
+      encargado: map['encargado'] ?? '',
+      fechaCreacion: DateTime.parse(map['fechaCreacion']),
+      fechaLimite: DateTime.parse(map['fechaLimite']),
+    );
+  }
 }
