@@ -108,8 +108,80 @@ class _KanbanAzurePageState extends State<KanbanAzurePage> {
               });
               await guardarEnJson();
               Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Usuario "${nombre.text}" agregado')),
+              );
             },
             child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ❌ Eliminar usuario
+  void eliminarUsuario() async {
+    if (usuarios.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No hay usuarios para eliminar')),
+      );
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Eliminar usuario'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: usuarios.map((u) {
+            return ListTile(
+              title: Text(u),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  final confirmar = await showDialog<bool>(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Confirmar eliminación'),
+                      content: Text('¿Seguro que deseas eliminar al usuario "$u"? '
+                          'También se eliminarán sus tareas asignadas.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancelar'),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Eliminar'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirmar == true) {
+                    setState(() {
+                      usuarios.remove(u);
+                      for (var estado in columnas.keys) {
+                        columnas[estado]!.removeWhere((t) => t.encargado == u);
+                      }
+                    });
+                    await guardarEnJson();
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Usuario "$u" eliminado')),
+                    );
+                  }
+                },
+              ),
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cerrar'),
           ),
         ],
       ),
@@ -362,6 +434,11 @@ class _KanbanAzurePageState extends State<KanbanAzurePage> {
             icon: const Icon(Icons.person_add),
             tooltip: 'Añadir usuario',
             onPressed: agregarUsuario,
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_remove),
+            tooltip: 'Eliminar usuario',
+            onPressed: eliminarUsuario,
           ),
         ],
       ),
